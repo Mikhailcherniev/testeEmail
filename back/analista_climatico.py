@@ -14,12 +14,12 @@ from datetime import datetime, timedelta
 
 # 1. Chave de API do Gemini
 # Obtenha em: https://aistudio.google.com/app/apikey
-GEMINI_API_KEY = "AIzaSyBL3z6g_CbsRel4XhIUkzb8j4E2Xc4jN0s"
+GEMINI_API_KEY = "AIzaSyDJDZOgBzmR3PEXsQFtR_EhM2ZzmeYWI7k"
 
 # 2. Credenciais do Gmail para envio via SMTP
-SEU_EMAIL_GMAIL = "marcos.lacerda374@gmail.com"
+SEU_EMAIL_GMAIL = "suporteclima.teste@gmail.com"
 # Crie uma senha de app em: https://myaccount.google.com/apppasswords
-SENHA_DE_APP_GMAIL = "khkg cmlk pqkf fnst"
+SENHA_DE_APP_GMAIL = "mxih lhil oazi itrh"
 
 # 3. Detalhes do E-mail
 EMAIL_DESTINATARIO = "henriquemicael94@gmail.com"
@@ -59,7 +59,7 @@ def inicializar_gee():
     """
     # --------------------------------------------------------------------------
     # IMPORTANTE: COLOQUE O ID DO SEU PROJETO DO GOOGLE CLOUD AQUI
-    ID_DO_PROJETO_GCP = "humidade-473022"
+    ID_DO_PROJETO_GCP = "testeapi-473103"
     # --------------------------------------------------------------------------
 
     try:
@@ -223,43 +223,37 @@ def enviar_email_smtp(destinatario, assunto, corpo):
     except Exception as e:
         print(f"Falha ao enviar o e-mail: {e}")
 
+def obter_coordenadas_com_gemini(nome_cidade):
+    """
+    Usa a API do Gemini para obter a latitude e longitude de uma cidade.
+    Retorna (latitude, longitude) ou (None, None) em caso de falha.
+    """
+    print(f"Usando Gemini para encontrar coordenadas de: {nome_cidade}")
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
-if __name__ == '__main__':
-    # Para que a detecção de localização funcione, instale a biblioteca geocoder:
-    # pip install geocoder
-    print("--- Iniciando Análise Climática Automatizada ---")
-    
-    # Etapa -1: Obter localização atual
-    latitude, longitude, nome_local = obter_localizacao_atual()
-    
-    # Etapa 0: Conectar ao Google Earth Engine
-    inicializar_gee()
+        prompt = f"""
+        Qual a latitude e a longitude aproximadas do centro da cidade de "{nome_cidade}"?
+        Responda APENAS no formato "lat: VALOR, lon: VALOR".
+        Por exemplo: "lat: -23.5505, lon: -46.6333"
+        """
 
-    # Etapa 1: Obter dados para a localização detectada
-    dados_atuais = obter_dados_gee(latitude, longitude, nome_local)
-    
-    if dados_atuais:
-        print(f"Dados coletados com sucesso: {dados_atuais}")
-        
-        # Etapa 2: Gerar o conteúdo do e-mail com o Gemini
-        conteudo_email = gerar_email_com_gemini(dados_atuais, nome_local, NOME_DESTINATARIO, SEU_NOME)
+        response = model.generate_content(prompt)
+        texto_resposta = response.text.strip()
 
-        if conteudo_email:
-            print("\n--- Conteúdo do E-mail Gerado ---\n")
-            print(conteudo_email)
-            print("\n----------------------------------\n")
-            
-            # Etapa 3: Extrair assunto e corpo para o envio
-            try:
-                partes = conteudo_email.split('\n', 1)
-                assunto = partes[0].replace("Assunto: ", "").strip()
-                corpo = partes[1].strip()
-                
-                enviar_email_smtp(EMAIL_DESTINATARIO, assunto, corpo)
-            except IndexError:
-                 print("Não foi possível extrair assunto e corpo do e-mail gerado. Enviando com assunto padrão.")
-                 enviar_email_smtp(EMAIL_DESTINATARIO, "Boletim Ambiental", conteudo_email)
-            except Exception as e:
-                print(f"Não foi possível processar o e-mail gerado para envio. Erro: {e}")
-    else:
-        print("Não foi possível obter os dados climáticos. O processo foi encerrado.")
+        # Extrai os valores da resposta
+        partes_lat = texto_resposta.split(',')[0]
+        partes_lon = texto_resposta.split(',')[1]
+
+        lat = float(partes_lat.split(':')[1].strip())
+        lon = float(partes_lon.split(':')[1].strip())
+
+        print(f"Coordenadas encontradas: Lat={lat}, Lon={lon}")
+        return lat, lon
+
+    except Exception as e:
+        print(f"Erro ao obter coordenadas com Gemini para '{nome_cidade}': {e}")
+        return None, None
+
+

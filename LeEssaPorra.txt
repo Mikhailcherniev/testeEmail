@@ -1,0 +1,32 @@
+Aqui ta as coisas que tem que baixar e os acessos aos email
+
+coisas que deve ser baixadas:
+
+referente a analista_climatico.py:
+pip install earthengine-api
+pip install google-generativeai
+
+app_cadastro.py:
+pip install geocoder
+pip install firebase-admin
+
+referente ao disparador_diario.py:
+pip install firebase-admin
+pip install earthengine-api
+pip install google-generativeai
+
+explicacao basica sem pontuacao:
+o analista_climatico e o codigo que pega os dados do google earth (google earth engine api), esse codigo tambem conta com o gemini pra fazer o que seria dados de terceiros, como climna medio. como esta a qualidade e de ar porem nao encostei mais nisso, sei como colocar mas nao encostei mais nisso.
+
+discipador disparador_diario e um codigo pra mandar emails para quem estiver cadastrado no firebase, ele pega o email e a regiao e faz o que se pede no analista_climatico
+
+app_cadastro usa a interface nativa do python pra voce colocar email e cidade e estado. depois disso salva no firebase
+
+email e senha:
+suporteclima.teste@gmail.com
+Micael@123q
+
+mais duvidas e so perguntar mandar um zap ou caoisa do tipo. 
+beijos
+ps. é assim que se faz algo minimamente aceitavel e não "ain sou incapaz de ter contato humano, se vira"
+amo quase todos vcs

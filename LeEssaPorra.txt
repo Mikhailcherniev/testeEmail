@@ -16,9 +16,9 @@ pip install earthengine-api
 pip install google-generativeai
 
 explicacao basica sem pontuacao:
-o analista_climatico e o codigo que pega os dados do google earth (google earth engine api), esse codigo tambem conta com o gemini pra fazer o que seria dados de terceiros, como climna medio. como esta a qualidade e de ar porem nao encostei mais nisso, sei como colocar mas nao encostei mais nisso.
+o analista_climatico e o codigo que pega os dados do google earth (google earth engine api), esse codigo tambem conta com o gemini pra escrever e mandar email e coletar dados de terceiros, como climna medio, como a qualidade do ar, porem nao encostei mais nisso, sei como colocar mas nao encostei mais nisso.
 
-discipador disparador_diario e um codigo pra mandar emails para quem estiver cadastrado no firebase, ele pega o email e a regiao e faz o que se pede no analista_climatico
+ disparador_diario e um codigo pra mandar emails para quem estiver cadastrado no firebase, ele pega o email e a regiao e faz o que se pede no analista_climatico
 
 app_cadastro usa a interface nativa do python pra voce colocar email e cidade e estado. depois disso salva no firebase
 
